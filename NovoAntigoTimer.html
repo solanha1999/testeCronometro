@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.css"
+      integrity="sha512-UWqafCfAKZVD24WgqPnyBy7BM3hZ5UWRDZt7tE36saC7zu1wLUDNoafWVBhzUzP9wVQLhebfmJcnXVjkern/fQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"
+      integrity="sha512-qzrZqY/kMVCEYeu/gCm8U2800Wz++LTGK4pitW/iswpCbjwxhsmUwleL1YXaHImptCHG0vJwU7Ly7ROw3ZQoww=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.js"
+      integrity="sha512-eMHGiUm5LKLiKtF/vaUQW07y7auYZiVn4zqqClNJFbm/7R5mAhdFoehc77Uv2jVGKWWEsIJwABve+HZWaFpAKw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style>
+      body {
+        /*background: url("https://static.pexels.com/photos/6663/desk-white-black-header.jpg") no-repeat center center fixed;*/
+        background-size: cover;
+      }
+      .pomodoro {
+        position: absolute;
+
+        width: 400px;
+        border-radius: 15px;
+        padding-top: 0;
+        padding-bottom: 25px;
+      }
+      p {
+        text-align: center;
+      }
+      .flip-clock-wrapper {
+        max-width: 400px;
+        margin: 3em auto 2em;
+        display: flex;
+        justify-content: center;
+      }
+      .col-md-4 {
+        display: flex;
+        justify-content: center;
+      }
+      .col-md-2 {
+        display: flex;
+        justify-content: center;
+        height: 34px;
+        align-items: center;
+      }
+      #session,
+      #Seconds {
+        max-width: 100%;
+      }
+      .counter {
+        display: flex;
+        justify-content: center;
+      }
+      .clock {
+        margin-top: 10px;
+      }
+      .container {
+        width: 400px;
+      }
+      .middle {
+        display: inline-block;
+      }
+      #btns {
+        display: flex;
+        justify-content: center;
+      }
+      #stop {
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+      .btn {
+        background-color: #333333;
+        color: #cccccc;
+      }
+      #sessInc,
+      #sessDec,
+      #breakInc,
+      #breakDec {
+        font-weight: bold;
+      }
+    </style>
+
+    <script>
+      $(document).ready(function () {
+        $("#clear").hide();
+        var countS = 5;
+        $("#session").val(countS);
+        var sec = 0;
+        var started = false;
+        $("#Seconds").val(sec);
+        var pos;
+        var countLama;
+        var count;
+        var clock = $(".timer").FlipClock(0, {
+          countdown: true,
+          clockFace: "MinuteCounter",
+          autoStart: false,
+        });
+        //SESSION
+        $("#sessInc").on("click", function () {
+          if ($("#session").val() >= 0) {
+            countS = parseInt($("#session").val());
+            countS += 1;
+            $("#session").val(countS);
+          }
+        });
+        $("#sessDec").on("click", function () {
+          if (
+            $("#session").val() > 1 ||
+            ($("#session").val() > 0 && $("#Seconds").val() > 0)
+          ) {
+            countS = parseInt($("#session").val());
+            countS -= 1;
+            $("#session").val(countS);
+          }
+        });
+        ///////
+
+        $("#secInc").on("click", function () {
+          if ($("#Seconds").val() >= 0) {
+            sec = parseInt($("#Seconds").val());
+            sec += 1;
+            $("#Seconds").val(sec);
+          }
+        });
+        $("#secDec").on("click", function () {
+          if (
+            $("#Seconds").val() > 1 ||
+            ($("#session").val() > 0 && $("#Seconds").val() > 0)
+          ) {
+            sec = parseInt($("#Seconds").val());
+            sec -= 1;
+            $("#Seconds").val(sec);
+          }
+        });
+        ///////
+        $("#startstop").on("click", function () {
+          if (!started) {
+            if (count != countS + sec) {
+              clock.setTime(countS * 60 + sec);
+            }
+            count = countS + sec;
+            clock.start();
+            pos = "session";
+            $("#strstp").removeClass("fa-play").addClass("fa-pause");
+            started = true;
+            $("#clear").hide();
+          } else {
+            clock.stop();
+            countLama = clock.getTime();
+            $("#strstp").removeClass("fa-pause").addClass("fa-play");
+            started = false;
+            $("#clear").show();
+          }
+        });
+        $("#clear").on("click", function () {
+          count = 0;
+          clock.reset();
+          $("#clear").hide();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="pomodoro">
+      <div id="1'" class="row">
+        <div class="timer"><div class="middle"></div></div>
+      </div>
+
+      <div class="container">
+        <div class="row" id="btns">
+          <button class="btn btn-default btn-lg" id="startstop">
+            <i id="strstp" class="fa-solid fa-play"></i>
+          </button>
+          <button class="btn btn-default btn-lg" id="clear">
+            <i class="fa fa-refresh"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <p>Minutes</p>
+            <p></p>
+          </div>
+          <div class="row counter">
+            <div class="col-md-2">
+              <button class="btn btn-default" id="sessDec">-</button>
+            </div>
+            <div class="col-md-4">
+              <input type="number" id="session" />
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-default" id="sessInc">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="row">
+            <p>Seconds</p>
+            <p></p>
+          </div>
+          <div class="row counter">
+            <div class="col-md-2">
+              <button class="btn btn-default" id="secDec">-</button>
+            </div>
+            <div class="col-md-4">
+              <input type="number" id="Seconds" />
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-default" id="secInc">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
