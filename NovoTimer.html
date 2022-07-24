@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Esse</title>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"
+      integrity="sha512-qzrZqY/kMVCEYeu/gCm8U2800Wz++LTGK4pitW/iswpCbjwxhsmUwleL1YXaHImptCHG0vJwU7Ly7ROw3ZQoww=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.js"
+      integrity="sha512-eMHGiUm5LKLiKtF/vaUQW07y7auYZiVn4zqqClNJFbm/7R5mAhdFoehc77Uv2jVGKWWEsIJwABve+HZWaFpAKw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@200&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --main-color: #676f77;
+        --backgound-color: #e0e0e0;
+        --light-shadow: #fff;
+        --dark-shadow: #989898;
+        --stroke-color: rgba(200, 200, 200, 0.7);
+      }
+
+      body {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--backgound-color);
+        margin: 0;
+        transition: background ease 1s;
+      }
+
+      .timer-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .themes-container {
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .themes-container .button {
+        margin: 10px;
+      }
+
+      .background {
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        background: var(--backgound-color);
+        box-shadow: inset 34px 34px 68px var(--dark-shadow),
+          -34px -34px 40px var(--light-shadow);
+        transition: box-shadow 1s, background 0.5s;
+      }
+
+      .animation {
+        animation: animation 0.6s infinite;
+      }
+
+      .background-inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        background: var(--backgound-color);
+        box-shadow: 34px 34px 68px var(--dark-shadow),
+          -34px -34px 40px var(--light-shadow);
+        transition: box-shadow 1s, background 0.5s;
+      }
+
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        stroke: var(--stroke-color);
+        transition: stroke 0.3s;
+      }
+
+      .form {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+      }
+
+      input {
+        font-size: 60px;
+        padding: 10px;
+        margin: 5px;
+        width: 250px;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-radius: 20px;
+        letter-spacing: -4px;
+        font-family: "Azeret Mono", monospace;
+        color: var(--main-color);
+      }
+
+      input::selection {
+        color: var(--main-color);
+        background: var(--light-shadow);
+      }
+
+      input:focus-visible {
+        outline: transparent;
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-around;
+        margin: 10px;
+      }
+
+      .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--main-color);
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+        border-radius: 10px;
+        background: var(--backgound-color);
+        box-shadow: 5px 5px 11px var(--dark-shadow),
+          -5px -5px 9px var(--light-shadow);
+        transition: box-shadow 0.3s, background 0.5s;
+      }
+
+      .button:hover {
+        box-shadow: 5px 5px 8px var(--dark-shadow),
+          -5px -5px 6px var(--light-shadow);
+      }
+
+      .button:active {
+        box-shadow: inset 5px 5px 9px var(--dark-shadow),
+          -5px -5px 9px var(--light-shadow);
+      }
+      #whiteTheme {
+        background-color: #e0e0e0;
+      }
+      #greenTheme {
+        background-color: #008080;
+      }
+      #bluegrayTheme {
+        background-color: #365563;
+      }
+
+      i {
+        font-size: 40px;
+      }
+
+      .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: default;
+      }
+
+      @keyframes animation {
+        0% {
+          transform: scale(1);
+        }
+        10% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      @media (orientation: portrait) {
+        body {
+          flex-direction: column;
+        }
+        .themes-container {
+          flex-direction: row-reverse;
+        }
+      }
+    </style>
+
+    <script>
+      var isStoped = false;
+      var isStarted = false;
+      var valorInputNumber = "";
+      var distance;
+      var hours;
+      var minutes;
+      var seconds;
+      let doThis = null;
+      const y = () => {
+        valorInputNumber = Number(valorInputNumber) - 1;
+        setaInput();
+        if (valorInputNumber < 0) {
+          clearInterval(x);
+          alert("sss");
+        }
+      };
+
+      const yStart = () => {
+        doThis = setInterval(y, 1000);
+        document.getElementById("start").classList.add("disabled");
+        isStarted = true;
+        isStoped = false;
+        document.getElementById("pause").classList.remove("fa-refresh");
+        document.getElementById("pause").classList.add("fa-pause");
+      };
+      const yStop = () => {
+        if (!isStoped && isStarted) {
+          clearInterval(doThis);
+          document.getElementById("start").classList.remove("disabled");
+          document.getElementById("pause").classList.remove("fa-pause");
+          document.getElementById("pause").classList.add("fa-refresh");
+          isStoped = true;
+        } else {
+          document.getElementById("pause").classList.remove("fa-refresh");
+          document.getElementById("pause").classList.add("fa-pause");
+          valorInputNumber = 0;
+          setaInput();
+          isStarted = false;
+          isStoped = false;
+        }
+      };
+
+      const input_demo = document.getElementById("demo");
+      const mudou = () => {
+        if ((event.keyCode > 47 && event.keyCode < 58) || event.keyCode == 8) {
+          if (event.keyCode != 8 && (valorInputNumber + "").length < 5) {
+            valorInputNumber += event.key;
+          } else if (event.keyCode == 8) {
+            valorInputNumber = (valorInputNumber + "").slice(
+              0,
+              (valorInputNumber + "").length - 1
+            );
+          }
+          setaInput();
+        }
+      };
+      const setaInput = () => {
+        distance = ("00000" + Number(valorInputNumber)).slice(-5);
+        hours = distance.slice(0, 1);
+        minutes = distance.slice(1, 3);
+        seconds = distance.slice(3, 5);
+        document.getElementById("demo").value =
+          hours + ":" + minutes + ":" + seconds;
+      };
+    </script>
+  </head>
+  <body>
+    <div class="timer-container">
+      <div class="background">&nbsp;</div>
+      <div class="background-inner">&nbsp;</div>
+
+      <svg height="400" width="400">
+        <circle
+          r="190"
+          cx="200"
+          cy="200"
+          fill="transparent"
+          stroke-width="20"
+          transform="rotate(-90 200 200)"
+        ></circle>
+      </svg>
+      <div class="form">
+        <input
+          name="demo"
+          id="demo"
+          type="text"
+          inputmode="numeric"
+          placeholder="0:00:00"
+          maxlength="7"
+          onkeyup="mudou(event)"
+        />
+        <div class="buttons">
+          <div class="button" id="start" onclick="yStart()">
+            <i class="fa-solid fa-play"></i>
+          </div>
+          <div class="button" onclick="yStop()">
+            <i id="pause" class="fa-solid fa-pause"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
