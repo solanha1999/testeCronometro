@@ -237,11 +237,13 @@
       var distance;
       var hours;
       var minutes;
+      var completo;
       var seconds;
       let doThis = null;
       const y = () => {
         valorInputNumber = Number(valorInputNumber) - 1;
         setaInput();
+        porcentagem(completo, valorInputNumber);
         if (valorInputNumber < 0) {
           clearInterval(x);
           alert("sss");
@@ -249,6 +251,7 @@
       };
 
       const yStart = () => {
+        completo = valorInputNumber;
         doThis = setInterval(y, 1000);
         document.getElementById("start").classList.add("disabled");
         isStarted = true;
@@ -295,6 +298,15 @@
         document.getElementById("demo").value =
           hours + ":" + minutes + ":" + seconds;
       };
+      const porcentagem = (total, atual) => {
+        document
+          .getElementById("cirulo")
+          .setAttribute("stroke-dashoffset", atual + "");
+        document
+          .getElementById("cirulo")
+          .setAttribute("stroke-dasharray", total + "");
+        document.getElementById("cirulo").setAttribute("pathLength", total + "");
+      };
     </script>
   </head>
   <body>
@@ -304,6 +316,7 @@
 
       <svg height="400" width="400">
         <circle
+          id="cirulo"
           r="190"
           cx="200"
           cy="200"
