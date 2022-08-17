@@ -108,6 +108,54 @@
     </style>
 
     <script>
+      var doThis = null;
+      var i = 0;
+      var conn = [];
+      var tempoWS = 0;
+      var conectado = false;
+      conn[i] = new WebSocket("wss://siteste.herokuapp.com/wss");
+      conn[0].onopen = (e) => {
+        conn.send("entrou");
+      };
+
+      conn[i].onmessage = (e) => {
+        if (conectado && e.data == "stop") {
+          document.getElementById("WSSTOP").click();
+          conectado = false;
+        } else if (!conectado && !isNaN(e.data)) {
+          tempoWS = Number(e.data);
+          conectado = true;
+          document.getElementById("WSONMSG").click();
+        }
+      };
+
+      const sendMsg = () => {
+        let connet = new WebSocket("wss://siteste.herokuapp.com/wss");
+        connet.onopen = (e) => {
+          connet.send(tempoWS);
+          conectado = true;
+        };
+      };
+      const sendStop = () => {
+        let connet = new WebSocket("wss://siteste.herokuapp.com/wss");
+        connet.onopen = (e) => {
+          connet.send("stop");
+          conectado = false;
+        };
+      };
+
+      const enviaTempo = () => {
+        document.getElementById("WS1").click();
+      };
+
+      const y = () => {
+        conn[i] = new WebSocket("wss://siteste.herokuapp.com/wss");
+        i++;
+      };
+      doThis = setInterval(y, 60000);
+
+      //////////////////////////
+
       $(document).ready(function () {
         $("#clear").hide();
         var countS = 5;
@@ -130,6 +178,25 @@
             countS += 1;
             $("#session").val(countS);
           }
+        });
+        $("#WS1").on("click", function () {
+          tempoWS = clock.getTime();
+          sendMsg();
+        });
+        $("#WSONMSG").on("click", function () {
+          clock.setTime(tempoWS);
+          clock.start();
+          pos = "session";
+          $("#strstp").removeClass("fa-play").addClass("fa-pause");
+          started = true;
+          $("#clear").hide();
+        });
+        $("#WSSTOP").on("click", function () {
+          clock.stop();
+          countLama = clock.getTime();
+          $("#strstp").removeClass("fa-pause").addClass("fa-play");
+          started = false;
+          $("#clear").show();
         });
         $("#sessDec").on("click", function () {
           if (
@@ -166,6 +233,9 @@
             if (count != countS + sec) {
               clock.setTime(countS * 60 + sec);
             }
+            enviaTempo();
+            clearInterval(doThis);
+            doThis = setInterval(enviaTempo, 5000);
             count = countS + sec;
             clock.start();
             pos = "session";
@@ -174,6 +244,9 @@
             $("#clear").hide();
           } else {
             clock.stop();
+            sendStop();
+            clearInterval(doThis);
+            doThis = setInterval(y, 60000);
             countLama = clock.getTime();
             $("#strstp").removeClass("fa-pause").addClass("fa-play");
             started = false;
@@ -237,6 +310,9 @@
               <input type="number" id="Seconds" />
             </div>
             <div class="col-md-2">
+              <button id="WS1" hidden></button>
+              <button id="WSONMSG" hidden></button>
+              <button id="WSSTOP" hidden></button>
               <button class="btn btn-default" id="secInc">+</button>
             </div>
           </div>
